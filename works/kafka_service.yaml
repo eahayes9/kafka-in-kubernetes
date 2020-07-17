@@ -1,0 +1,20 @@
+apiVersion: v1 
+kind: Service 
+metadata:  
+   name: kafka
+   labels:
+     app: kafkaApp
+spec:
+   ports:  
+   - name: internal-access
+     protocol: TCP
+     port: 9092 
+     targetPort: 9092
+   - name: ext-access
+     protocol: TCP
+     port: 9094 
+     targetPort: 9094
+     nodePort: 30021
+   selector:  
+     app: kafkaApp 
+   type: NodePort

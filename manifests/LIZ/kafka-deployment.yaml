@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+   name: kafkabroker
+   labels:
+     app: kafka
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kafka
+  template:
+    metadata:
+      labels:
+        app: kafka
+    spec:  
+      containers:  
+      - name: kafka-broker
+        image: bitnami/kafka:2.5.0
+        ports:  
+        - containerPort: 9092
+        envFrom:
+        - configMapRef:
+            name: kafka-config

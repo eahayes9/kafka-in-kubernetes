@@ -1,0 +1,12 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: kafka
+spec:
+  type: NodePort
+  selector:
+    app: kafka
+  ports:
+  - protocol: TCP
+    port: 9091
+    nodePort: 30901

@@ -1,0 +1,76 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: zk-configs
+  namespace: default
+data:
+  ALLOW_ANONYMOUS_LOGIN: "yes"
+  ZOOKEEPER_ID: "1"
+  ZOOKEEPER_SERVER_1: "zk_1"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: zk-s
+  labels:
+    app: zk-1
+spec:
+  selector:
+    matchLabels:
+      app: zk-1
+  ports:
+  - name: client
+    port: 2181
+    protocol: TCP
+  - name: follower
+    port: 2888
+    protocol: TCP
+  - name: leader
+    port: 3888
+    protocol: TCP
+  selector:
+    app: zk-1
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: zk-deployment-1
+  labels:
+    app: zk-1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: zk-1
+  template:
+    metadata:
+      labels:
+        app: zk-1
+    spec:
+      containers:
+      - name: zk1
+        image: bitnami/zookeeper
+        ports:
+        - containerPort: 2181
+        envFrom:
+        - configMapRef:
+            name: zk-configs
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: test-zk-svc
+  labels:
+    app: zk-1
+spec:
+  selector:
+    matchLabels:
+      app: zk-1
+spec:
+  ports:
+    - protocol: TCP
+      port: 2181
+      nodePort: 30020
+  type: NodePort
+  selector:
+    app: zk-1

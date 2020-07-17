@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: zookeeper-config
+  namespace: default
+data:
+  ALLOW_ANONYMOUS_LOGIN: YES
+  ZOO_LOG_LEVEL: DEBUG
